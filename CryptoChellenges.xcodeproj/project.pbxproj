@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B512AE3B1C6BD9E900B83EEA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE3A1C6BD9E900B83EEA /* main.swift */; };
+		B512AE421C6BDA1700B83EEA /* crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE411C6BDA1700B83EEA /* crypto.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		B512AE371C6BD9E900B83EEA /* CryptoChellenges */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CryptoChellenges; sourceTree = BUILT_PRODUCTS_DIR; };
 		B512AE3A1C6BD9E900B83EEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		B512AE411C6BDA1700B83EEA /* crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = crypto.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 		B512AE391C6BD9E900B83EEA /* CryptoChellenges */ = {
 			isa = PBXGroup;
 			children = (
+				B512AE411C6BDA1700B83EEA /* crypto.swift */,
 				B512AE3A1C6BD9E900B83EEA /* main.swift */,
 			);
 			path = CryptoChellenges;
@@ -119,6 +122,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B512AE421C6BDA1700B83EEA /* crypto.swift in Sources */,
 				B512AE3B1C6BD9E900B83EEA /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
