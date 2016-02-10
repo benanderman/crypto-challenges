@@ -120,6 +120,22 @@ class Crypto {
     return string.map { $0 ^ key }
   }
   
+  func cipherStringWithKey(string: [UInt8], key: [UInt8]) -> [UInt8] {
+    return rawToHex(string.enumerate().map { (index: Int, byte: UInt8) in
+      return byte ^ key[index % key.count]
+    })
+  }
+  
+  func rawToHex(hex: [UInt8]) -> [UInt8] {
+    var result: [UInt8] = [UInt8]()
+    let values: [UInt8] = [UInt8]("0123456789abcdef".utf8)
+    for char in hex {
+      result.append(values[Int(char / 16)])
+      result.append(values[Int(char % 16)])
+    }
+    return result
+  }
+  
   func hexToRaw(hex: [UInt8]) -> [UInt8]? {
     if (hex.count % 2 != 0) {
       return nil // Not a valid hex string

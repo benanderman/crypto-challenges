@@ -47,3 +47,12 @@ do {
 } catch {
   print("Failed to read input file")
 }
+
+let repeatingByteCipherInput = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
+result = String(bytes: crypto.cipherStringWithKey([UInt8](repeatingByteCipherInput.utf8), key: [UInt8]("ICE".utf8)), encoding: NSUTF8StringEncoding)
+if let output5 = result {
+  print(repeatingByteCipherInput + "\ncipherStringWithKey('ICE'):\n" + output5 + "\n")
+} else {
+  print("Failed to decipher")
+}
+
