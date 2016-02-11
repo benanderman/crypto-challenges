@@ -61,7 +61,7 @@ class Crypto {
     }
     if let raw1 = hexToRaw(hex1), let raw2 = hexToRaw(hex2) {
       var result: [UInt8] = [UInt8]()
-      for (var i = 0; i < raw1.count; i++) {
+      for i in 0 ..< raw1.count {
         result.append(raw1[i] ^ raw2[i])
       }
       return result
@@ -74,7 +74,7 @@ class Crypto {
     var bestResult = [UInt8]()
     for hex in inputs {
       if let raw = hexToRaw(hex) {
-        for var i = 0; i < 256; i++ {
+        for i in 0 ..< 256 {
           let deciphered = decipherSingleByteXor(raw, key: UInt8(i))
           let score = textScoreForString(deciphered)
           if (score > bestScore) {
@@ -99,19 +99,19 @@ class Crypto {
     }
     
     var score = 0
-    let lowerCount = (counts[AsciiRange.Lower] != nil) ? counts[AsciiRange.Lower]! : 0
-    let upperCount = (counts[AsciiRange.Upper] != nil) ? counts[AsciiRange.Upper]! : 0
-    let spaceCount = (counts[AsciiRange.Space] != nil) ? counts[AsciiRange.Space]! : 0
-    let badCount = (counts[AsciiRange.Lower] != nil) ? counts[AsciiRange.Lower]! : 0
+    let lowerCount = counts[AsciiRange.Lower] ?? 0
+    let upperCount = counts[AsciiRange.Upper] ?? 0
+    let spaceCount = counts[AsciiRange.Space] ?? 0
+    let badCount = counts[AsciiRange.Bad] ?? 0
     
-    score += Int((1 - abs(Double(lowerCount) / Double(text.count) - 0.8)) * 10)
-    score += Int((1 - abs(Double(upperCount) / Double(text.count) - 0.1)) * 5)
-    score += Int((1 - abs(Double(spaceCount) / Double(text.count) - 0.1)) * 10)
-    score += Int((1 - abs(Double(badCount) / Double(text.count))) * -50)
+    score += Int((1 - abs(Double(lowerCount) / Double(text.count) - 0.8)) * 100)
+    score += Int((1 - abs(Double(upperCount) / Double(text.count) - 0.1)) * 50)
+    score += Int((1 - abs(Double(spaceCount) / Double(text.count) - 0.1)) * 100)
+    score += Int(Double(badCount) / Double(text.count) * -900)
     
-    //    if let string = String(bytes: text, encoding: NSUTF8StringEncoding) {
-    //      print(string + ": " + String(score))
-    //    }
+//    if let string = String(bytes: text, encoding: NSUTF8StringEncoding) {
+//      print(string + ": " + String(score))
+//    }
     
     return score
   }
