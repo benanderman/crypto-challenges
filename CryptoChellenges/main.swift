@@ -10,12 +10,14 @@ import Foundation
 
 let crypto: Crypto = Crypto()
 
+print(NSFileManager.defaultManager().currentDirectoryPath)
+
 let base64TestInput = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
 var result = String(bytes: crypto.hexToBase64([UInt8](base64TestInput.utf8))!, encoding: NSUTF8StringEncoding)
 if let output = result {
   print(base64TestInput + "\nhexToBase64:\n" + output + "\n")
 } else {
-  print("Failed to convert")
+  print("Failed to convert\n")
 }
 
 let xorTestInput1 = "1c0111001f010100061a024b53535009181c"
@@ -24,7 +26,7 @@ result = String(bytes: crypto.xorHexStrings([UInt8](xorTestInput1.utf8), hex2: [
 if let output2 = result {
   print(xorTestInput1 + ", " + xorTestInput2 + "\nxorHexStrings:\n" + output2 + "\n")
 } else {
-  print("Failed to xor")
+  print("Failed to xor\n")
 }
 
 let singleByteXorInput = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
@@ -32,11 +34,11 @@ result = String(bytes: crypto.decipherSingleByteXorHex([[UInt8]](arrayLiteral: [
 if let output3 = result {
   print(singleByteXorInput + "\ndecipherSingleByteXorHex:\n" + output3 + "\n")
 } else {
-  print("Failed to decipher")
+  print("Failed to decipher\n")
 }
 
 do {
-  let singleByteXor2Input = try NSString(contentsOfFile: "/Volumes/HD/programming_stuff/exercises/crypto/4.txt", encoding: NSUTF8StringEncoding)
+  let singleByteXor2Input = try NSString(contentsOfFile: "4.txt", encoding: NSUTF8StringEncoding)
   let lines = singleByteXor2Input.componentsSeparatedByString("\r\n")
   result = String(bytes: crypto.decipherSingleByteXorHex(lines.map { [UInt8]($0.utf8) })!, encoding: NSUTF8StringEncoding)
   if let output4 = result {
@@ -45,7 +47,7 @@ do {
     print("Failed to decipher")
   }
 } catch {
-  print("Failed to read input file")
+  print("Failed to read input file\n")
 }
 
 let repeatingByteCipherInput = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
@@ -53,6 +55,6 @@ result = String(bytes: crypto.cipherStringWithKey([UInt8](repeatingByteCipherInp
 if let output5 = result {
   print(repeatingByteCipherInput + "\ncipherStringWithKey('ICE'):\n" + output5 + "\n")
 } else {
-  print("Failed to decipher")
+  print("Failed to decipher\n")
 }
 
