@@ -10,6 +10,7 @@
 		B512AE3B1C6BD9E900B83EEA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE3A1C6BD9E900B83EEA /* main.swift */; };
 		B512AE421C6BDA1700B83EEA /* crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE411C6BDA1700B83EEA /* crypto.swift */; };
 		B512AE441C6C271E00B83EEA /* 4.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE431C6C261500B83EEA /* 4.txt */; };
+		B512AE461C6C311700B83EEA /* 6.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE451C6C30FC00B83EEA /* 6.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,6 +21,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				B512AE441C6C271E00B83EEA /* 4.txt in CopyFiles */,
+				B512AE461C6C311700B83EEA /* 6.txt in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -30,6 +32,7 @@
 		B512AE3A1C6BD9E900B83EEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		B512AE411C6BDA1700B83EEA /* crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = crypto.swift; sourceTree = "<group>"; };
 		B512AE431C6C261500B83EEA /* 4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 4.txt; sourceTree = "<group>"; };
+		B512AE451C6C30FC00B83EEA /* 6.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 6.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +68,7 @@
 				B512AE411C6BDA1700B83EEA /* crypto.swift */,
 				B512AE3A1C6BD9E900B83EEA /* main.swift */,
 				B512AE431C6C261500B83EEA /* 4.txt */,
+				B512AE451C6C30FC00B83EEA /* 6.txt */,
 			);
 			path = CryptoChellenges;
 			sourceTree = "<group>";

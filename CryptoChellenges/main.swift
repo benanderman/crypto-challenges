@@ -10,14 +10,19 @@ import Foundation
 
 let crypto: Crypto = Crypto()
 
-print(NSFileManager.defaultManager().currentDirectoryPath)
-
 let base64TestInput = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
 var result = String(bytes: crypto.hexToBase64([UInt8](base64TestInput.utf8))!, encoding: NSUTF8StringEncoding)
 if let output = result {
   print(base64TestInput + "\nhexToBase64:\n" + output + "\n")
 } else {
   print("Failed to convert\n")
+}
+
+let base64Result = String(bytes: crypto.base64ToRaw([UInt8](result!.utf8))!, encoding: NSUTF8StringEncoding)
+if let outputBase64 = base64Result {
+  print("\(result!)\nbase64ToRaw:\n\(outputBase64)\n")
+} else {
+  print("Failed to convert to base64\n")
 }
 
 let xorTestInput1 = "1c0111001f010100061a024b53535009181c"
@@ -56,5 +61,24 @@ if let output5 = result {
   print(repeatingByteCipherInput + "\ncipherStringWithKey('ICE'):\n" + output5 + "\n")
 } else {
   print("Failed to decipher\n")
+}
+
+let hammingInput1 = "this is a test"
+let hammingInput2 = "wokka wokka!!!"
+let resultInt = crypto.editDistance([UInt8](hammingInput1.utf8), data2: [UInt8](hammingInput2.utf8))
+// Should be 37
+print("editDistance('\(hammingInput1)', '\(hammingInput2)') = \(resultInt)\n")
+
+do {
+  var repeatingByteDecipherInput = try NSString(contentsOfFile: "6.txt", encoding: NSUTF8StringEncoding)
+  repeatingByteDecipherInput = repeatingByteDecipherInput.stringByReplacingOccurrencesOfString("\r\n", withString: "")
+  result = String(bytes: crypto.decipherRepeatingKeyXorBase64([UInt8](String(repeatingByteDecipherInput).utf8))!, encoding: NSUTF8StringEncoding)
+  if let output4 = result {
+    print("decipherRepeatingKeyXorBase64 (with 6.txt):\n" + output4 + "\n")
+  } else {
+    print("Failed to decipher")
+  }
+} catch {
+  print("Failed to read input file\n")
 }
 
