@@ -11,6 +11,8 @@
 		B512AE421C6BDA1700B83EEA /* crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE411C6BDA1700B83EEA /* crypto.swift */; };
 		B512AE441C6C271E00B83EEA /* 4.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE431C6C261500B83EEA /* 4.txt */; };
 		B512AE461C6C311700B83EEA /* 6.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE451C6C30FC00B83EEA /* 6.txt */; };
+		B512AE481C7009A000B83EEA /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE471C7009A000B83EEA /* extensions.swift */; };
+		B512AE4A1C73CF4D00B83EEA /* challenge_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE491C73CF4D00B83EEA /* challenge_tests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +35,8 @@
 		B512AE411C6BDA1700B83EEA /* crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = crypto.swift; sourceTree = "<group>"; };
 		B512AE431C6C261500B83EEA /* 4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 4.txt; sourceTree = "<group>"; };
 		B512AE451C6C30FC00B83EEA /* 6.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 6.txt; sourceTree = "<group>"; };
+		B512AE471C7009A000B83EEA /* extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
+		B512AE491C73CF4D00B83EEA /* challenge_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = challenge_tests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +73,8 @@
 				B512AE3A1C6BD9E900B83EEA /* main.swift */,
 				B512AE431C6C261500B83EEA /* 4.txt */,
 				B512AE451C6C30FC00B83EEA /* 6.txt */,
+				B512AE471C7009A000B83EEA /* extensions.swift */,
+				B512AE491C73CF4D00B83EEA /* challenge_tests.swift */,
 			);
 			path = CryptoChellenges;
 			sourceTree = "<group>";
@@ -131,7 +137,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B512AE421C6BDA1700B83EEA /* crypto.swift in Sources */,
+				B512AE4A1C73CF4D00B83EEA /* challenge_tests.swift in Sources */,
 				B512AE3B1C6BD9E900B83EEA /* main.swift in Sources */,
+				B512AE481C7009A000B83EEA /* extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
