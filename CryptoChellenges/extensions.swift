@@ -28,9 +28,7 @@ extension String {
   
   var bytesFromBase64: [UInt8]? {
     let bytes = self.bytes
-    if bytes.count % 4 != 0 || bytes.count == 0 {
-      return nil
-    }
+    guard bytes.count % 4 == 0 && bytes.count > 0 else {return nil}
     
     var result: [UInt8] = [UInt8]()
     for var i = 0; i < bytes.count; i += 4 {

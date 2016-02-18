@@ -8,94 +8,91 @@
 
 import Foundation
 
-class Crypto {
+struct Crypto {
   
   enum AsciiRange: Int {
     case Lower, Upper, Space, Symbol, Bad, Other
     init(value: UInt8) {
-      self = Other
-      if value >= "a".utf8.first! && value <= "z".utf8.first! {
-        self = Lower
-      }
-      if value >= "A".utf8.first! && value <= "Z".utf8.first! {
-        self = Upper
-      }
-      if value == " ".utf8.first! {
-        self = Space
-      }
-      if (value > 32 && value < 48) || (value > 57 && value < 65) || (value > 90 && value < 97) || value > 122 {
-        self = Symbol
-      }
-      if (value < 32 && value != 10 && value != 13) || value > 127 {
-        self = Bad
+      switch value {
+      case 97 ... 122:
+          self = Lower
+      case 65 ... 91:
+          self = Upper
+      case 32:
+          self = Space
+      case (33 ... 47), (58 ... 64), (91 ... 96), (123 ... 126):
+          self = Symbol
+      case (0 ..< 10), 11, 12, (14 ... 31), (127 ..< 255):
+          self = Bad
+      default:
+        self = Other
       }
     }
   }
   
-  func hexToBase64(hex: String) -> String? {
+  static func hexToBase64(hex: String) -> String? {
     return hex.bytesFromHex?.base64Representation
   }
   
-  func xorHexStrings(hex1: String, hex2: String) -> String? {
-    if (hex1.utf8.count != hex2.utf8.count) {
+  static func xorHexStrings(hex1: String, hex2: String) -> String? {
+    guard hex1.utf8.count == hex2.utf8.count else {return nil}
+    guard let bytes1 = hex1.bytesFromHex, let bytes2 = hex2.bytesFromHex else {return nil}
+    let result = (0 ..< bytes1.count).map{ bytes1[$0] ^ bytes2[$0] }
+    return result.hexStringRepresentation
+  }
+  
+  static func findBestHammingDistance(data: [UInt8], range: Range<Int>) -> Int {
+    var keySize = 0
+    var bestEditDistance = Double.infinity
+    for i in range {
+      var distances:[Double] = [Double]()
+      for o in data.startIndex.stride(to: data.endIndex - i * 2, by: i) {
+        let data1 = [UInt8](data[o ..< o + i])
+        let data2 = [UInt8](data[o + i ..< o + i * 2])
+        let distance = hammingDistance(data1, data2: data2)
+        let normalizedDistance = Double(distance) / Double(i * 8)
+        distances.append(normalizedDistance)
+      }
+      let distance = distances.reduce(0) { $0 + $1 } / Double(distances.count)
+      if (distance < bestEditDistance) {
+        bestEditDistance = distance
+        keySize = i
+      }
+    }
+    return keySize
+  }
+  
+  static func decipherRepeatingKeyXorBase64(base64: String) -> (result: String, key: [UInt8])? {
+    guard let bytes = base64.bytesFromBase64 else {return nil}
+    let keySize = findBestHammingDistance(bytes, range: 2 ... 40)
+    
+    var blocks = [[UInt8]]()
+    var key = [UInt8]()
+    for i in 0 ..< keySize {
+      var block = [UInt8]()
+      for j in i.stride(to: bytes.count, by: keySize) {
+        block.append(bytes[j])
+      }
+      let decoded = decipherSingleByteXor(block)
+      blocks.append(decoded.result)
+      key.append(decoded.key)
+    }
+    
+    if (blocks.count == 0) {
       return nil
     }
-    if let bytes1 = hex1.bytesFromHex, let bytes2 = hex2.bytesFromHex {
-      var result: [UInt8] = [UInt8]()
-      for i in 0 ..< bytes1.count {
-        result.append(bytes1[i] ^ bytes2[i])
+    var result = [UInt8]()
+    for i in 0 ..< blocks.first!.count {
+      for block in blocks {
+        if i < block.count {
+          result.append(block[i])
+        }
       }
-      return result.hexStringRepresentation
     }
-    return nil
+    return (result.stringRepresentation, key)
   }
   
-  func decipherRepeatingKeyXorBase64(base64: String) -> (result: String, key: [UInt8])? {
-    if let raw = base64.bytesFromBase64 {
-      var keySize = 0
-      var bestEditDistance = Double.infinity
-      for i in 2 ... 40 {
-        var distances:[Double] = [Double]()
-        for o in raw.startIndex.stride(to: raw.endIndex - i * 2, by: i) {
-          let distance = Double(editDistance([UInt8](raw[o ..< o + i]), data2: [UInt8](raw[o + i ..< o + i * 2]))) / Double(i * 8)
-          distances.append(distance)
-        }
-        let distance = distances.reduce(0) { $0 + $1 } / Double(distances.count)
-        if (distance < bestEditDistance) {
-          bestEditDistance = distance
-          keySize = i
-        }
-      }
-      
-      var blocks = [[UInt8]]()
-      var key = [UInt8]()
-      for i in 0 ..< keySize {
-        var block:[UInt8] = [UInt8]()
-        for j in i.stride(to: raw.count, by: keySize) {
-          block.append(raw[j])
-        }
-        let decoded = decipherSingleByteXor(block)
-        blocks.append(decoded.result)
-        key.append(decoded.key)
-      }
-      
-      if (blocks.count == 0) {
-        return nil
-      }
-      var result:[UInt8] = [UInt8]()
-      for i in 0 ..< blocks.first!.count {
-        for block in blocks {
-          if i < block.count {
-            result.append(block[i])
-          }
-        }
-      }
-      return (result.stringRepresentation, key)
-    }
-    return nil
-  }
-  
-  func decipherSingleByteXor(input: [UInt8]) -> (result: [UInt8], key: UInt8, score: Int) {
+  static func decipherSingleByteXor(input: [UInt8]) -> (result: [UInt8], key: UInt8, score: Int) {
     var bestScore = Int.min
     var bestResult = [UInt8]()
     var bestKey = 0 as UInt8
@@ -111,21 +108,20 @@ class Crypto {
     return (bestResult, bestKey, bestScore)
   }
   
-  func decipherSingleByteXorHex(inputs: [String]) -> String? {
+  static func decipherSingleByteXorHex(inputs: [String]) -> String? {
     var bestScore = Int.min
     var bestResult = [UInt8]()
     for input in inputs {
-      if let bytes = input.bytesFromHex {
-        let (result, _, score) = decipherSingleByteXor(bytes)
-        if (score > bestScore) {
-          (bestResult, bestScore) = (result, score)
-        }
+      guard let bytes = input.bytesFromHex else {return nil}
+      let (result, _, score) = decipherSingleByteXor(bytes)
+      if (score > bestScore) {
+        (bestResult, bestScore) = (result, score)
       }
     }
     return bestResult.stringRepresentation
   }
   
-  func textScoreForData(data: [UInt8]) -> Int {
+  static func textScoreForData(data: [UInt8]) -> Int {
     var counts: Dictionary<AsciiRange, Int> = Dictionary<AsciiRange, Int>()
     for char in data {
       let range = AsciiRange(value: char)
@@ -147,7 +143,7 @@ class Crypto {
     score += Int((1 - abs(Double(upperCount) / Double(data.count) - 0.2)) * 50)
     let spaceRatio = Double(spaceCount) / Double(data.count)
     score += Int((1 - abs(spaceRatio - 0.17)) * 100)
-    if spaceRatio > 0 && spaceRatio < 0.8 {
+    if spaceRatio > 0 && spaceRatio < 0.5 {
       score += 500
     }
     let symbolRatio = Double(symbolCount) / Double(data.count)
@@ -160,20 +156,18 @@ class Crypto {
     return score
   }
   
-  func decipherSingleByteXor(string: [UInt8], key: UInt8) -> [UInt8] {
+  static func decipherSingleByteXor(string: [UInt8], key: UInt8) -> [UInt8] {
     return string.map { $0 ^ key }
   }
   
-  func cipherStringWithKey(string: String, key: [UInt8]) -> String {
+  static func cipherStringWithKey(string: String, key: [UInt8]) -> String {
     return string.bytes.enumerate().map({ (index: Int, byte: UInt8) in
       return byte ^ key[index % key.count]
     }).hexStringRepresentation
   }
   
-  func editDistance(data1: [UInt8], data2: [UInt8]) -> Int {
-    if (data1.count != data2.count) {
-      return ~0
-    }
+  static func hammingDistance(data1: [UInt8], data2: [UInt8]) -> Int {
+    guard data1.count == data2.count else { return ~0 }
     var distance = 0
     for i in 0 ..< data1.count {
       for o in 0 ..< 8 {
