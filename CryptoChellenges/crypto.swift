@@ -69,10 +69,7 @@ struct Crypto {
     var blocks = [[UInt8]]()
     var key = [UInt8]()
     for i in 0 ..< keySize {
-      var block = [UInt8]()
-      for j in i.stride(to: bytes.count, by: keySize) {
-        block.append(bytes[j])
-      }
+      let block = i.stride(to: bytes.count, by: keySize).map { bytes[$0] }
       let decoded = decipherSingleByteXor(block)
       blocks.append(decoded.result)
       key.append(decoded.key)
