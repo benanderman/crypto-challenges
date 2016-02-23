@@ -19,6 +19,8 @@ func testChallenges() {
     testChallenge4()
     testChallenge5()
     testChallenge6()
+    testChallenge7()
+    testChallenge8()
   }
   
   testAllChallenges()
@@ -79,6 +81,35 @@ func testChallenges() {
         print("decipherRepeatingKeyXorBase64 (with 6.txt):\nKey: \(result.key.stringRepresentation)\n\(result.result)\n")
       } else {
         print("Failed to decipher")
+      }
+    } catch {
+      print("Failed to read input file\n")
+    }
+  }
+  
+  func testChallenge7() {
+    do {
+      var aes128Input = try NSString(contentsOfFile: "7.txt", encoding: NSUTF8StringEncoding)
+      aes128Input = aes128Input.stringByReplacingOccurrencesOfString("\r\n", withString: "")
+      let key = "YELLOW SUBMARINE"
+      if let result = Crypto.decodeAES128Base64(String(aes128Input), key: key) {
+        print("decodeAES128Base64 (with 7.txt):\n\(result)\n")
+      } else {
+        print("Failed to decode AES128")
+      }
+    } catch {
+      print("Failed to read input file\n")
+    }
+  }
+  
+  func testChallenge8() {
+    do {
+      let input = try NSString(contentsOfFile: "8.txt", encoding: NSUTF8StringEncoding)
+      let lines = input.componentsSeparatedByString("\r\n")
+      if let result = Crypto.detectAES128Hex(lines) {
+        print("detectAES128Base64 (with 8.txt):\n\(result)\n")
+      } else {
+        print("Failed to decipher\n")
       }
     } catch {
       print("Failed to read input file\n")

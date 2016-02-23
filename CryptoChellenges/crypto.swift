@@ -119,6 +119,8 @@ struct Crypto {
   }
   
   static func textScoreForData(data: [UInt8]) -> Int {
+    guard !data.isEmpty else { return Int.min }
+    
     var counts: Dictionary<AsciiRange, Int> = Dictionary<AsciiRange, Int>()
     for char in data {
       let range = AsciiRange(value: char)
@@ -151,6 +153,44 @@ struct Crypto {
     score += Int(Double(badCount) / Double(data.count) * -900)
     
     return score
+  }
+  
+  static func decodeAES128Base64(data: String, key: String) -> String? {
+    guard var bytes = data.bytesFromBase64 where bytes.count % 16 == 0 else { return nil }
+    
+    // Fixes a linker error caused by an OpenSSL bug with static libraries
+    OPENSSL_cleanse(nil, 0)
+    
+    var dec_key: AES_KEY = AES_KEY()
+    AES_set_decrypt_key(key.bytes, 128, &dec_key)
+    var result = [UInt8](count: bytes.count, repeatedValue: 0)
+    for i in 0.stride(to: bytes.count, by: 16) {
+      AES_ecb_encrypt(&bytes + i, &result + i, &dec_key, AES_DECRYPT)
+    }
+    return result.stringRepresentation
+  }
+  
+  static func detectAES128Hex(inputs: [String]) -> String? {
+    var mostHits = 0
+    var result: String? = nil
+    for data in inputs {
+      guard data.utf8.count % 32 == 0 else { continue }
+      var hits = 0
+      var blocks: Set<String> = []
+      for var i = data.startIndex; i != data.endIndex; i = i.advancedBy(32) {
+        let block = data.substringWithRange(i ..< i.advancedBy(32))
+        if blocks.contains(block) {
+          hits++
+        } else {
+          blocks.insert(block)
+        }
+      }
+      if hits > mostHits {
+        result = data
+        mostHits = hits
+      }
+    }
+    return result
   }
   
   static func decipherSingleByteXor(string: [UInt8], key: UInt8) -> [UInt8] {

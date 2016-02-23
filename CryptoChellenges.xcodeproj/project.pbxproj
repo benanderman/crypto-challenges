@@ -13,6 +13,9 @@
 		B512AE461C6C311700B83EEA /* 6.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE451C6C30FC00B83EEA /* 6.txt */; };
 		B512AE481C7009A000B83EEA /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE471C7009A000B83EEA /* extensions.swift */; };
 		B512AE4A1C73CF4D00B83EEA /* challenge_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE491C73CF4D00B83EEA /* challenge_tests.swift */; };
+		B512AE691C7A79CE00B83EEA /* 7.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE611C7A730400B83EEA /* 7.txt */; };
+		B512AE6B1C7B71E200B83EEA /* 8.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE6A1C7A7E0000B83EEA /* 8.txt */; };
+		B512AE751C7D10AC00B83EEA /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B512AE741C7D10AC00B83EEA /* libcrypto.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -22,6 +25,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				B512AE6B1C7B71E200B83EEA /* 8.txt in CopyFiles */,
+				B512AE691C7A79CE00B83EEA /* 7.txt in CopyFiles */,
 				B512AE441C6C271E00B83EEA /* 4.txt in CopyFiles */,
 				B512AE461C6C311700B83EEA /* 6.txt in CopyFiles */,
 			);
@@ -37,6 +42,10 @@
 		B512AE451C6C30FC00B83EEA /* 6.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 6.txt; sourceTree = "<group>"; };
 		B512AE471C7009A000B83EEA /* extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		B512AE491C73CF4D00B83EEA /* challenge_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = challenge_tests.swift; sourceTree = "<group>"; };
+		B512AE611C7A730400B83EEA /* 7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 7.txt; sourceTree = "<group>"; };
+		B512AE6A1C7A7E0000B83EEA /* 8.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 8.txt; sourceTree = "<group>"; };
+		B512AE6E1C7CFEC400B83EEA /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
+		B512AE741C7D10AC00B83EEA /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B512AE751C7D10AC00B83EEA /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				B512AE391C6BD9E900B83EEA /* CryptoChellenges */,
+				B512AE6F1C7D053E00B83EEA /* Libraries */,
 				B512AE381C6BD9E900B83EEA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,12 +82,23 @@
 			children = (
 				B512AE411C6BDA1700B83EEA /* crypto.swift */,
 				B512AE3A1C6BD9E900B83EEA /* main.swift */,
-				B512AE431C6C261500B83EEA /* 4.txt */,
-				B512AE451C6C30FC00B83EEA /* 6.txt */,
 				B512AE471C7009A000B83EEA /* extensions.swift */,
 				B512AE491C73CF4D00B83EEA /* challenge_tests.swift */,
+				B512AE431C6C261500B83EEA /* 4.txt */,
+				B512AE451C6C30FC00B83EEA /* 6.txt */,
+				B512AE611C7A730400B83EEA /* 7.txt */,
+				B512AE6A1C7A7E0000B83EEA /* 8.txt */,
+				B512AE6E1C7CFEC400B83EEA /* bridge.h */,
 			);
 			path = CryptoChellenges;
+			sourceTree = "<group>";
+		};
+		B512AE6F1C7D053E00B83EEA /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				B512AE741C7D10AC00B83EEA /* libcrypto.a */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,14 +251,26 @@
 		B512AE3F1C6BD9E900B83EEA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = CryptoChellenges/bridge.h;
 			};
 			name = Debug;
 		};
 		B512AE401C6BD9E900B83EEA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = CryptoChellenges/bridge.h;
 			};
 			name = Release;
 		};
@@ -259,6 +293,7 @@
 				B512AE401C6BD9E900B83EEA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
