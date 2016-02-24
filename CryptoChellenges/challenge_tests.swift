@@ -22,6 +22,7 @@ func testChallenges() {
     testChallenge7()
     testChallenge8()
     testChallenge9()
+    testChallenge10()
   }
   
   testAllChallenges()
@@ -128,7 +129,34 @@ func testChallenges() {
   func testChallenge9() {
     let input = "YELLOW SUBMARINE".bytes
     let result = Crypto.padUsingPKCS7(input, multiple: 20)
-    print("padUsingPKCS7(\(input), multiple: 20) = \(result)")
+    print("padUsingPKCS7(\(input), multiple: 20) = \(result)\n")
+  }
+  
+  func testChallenge10() {
+    let iv = (0 ..< 16).map { _ in UInt8(arc4random_uniform(UInt32(UInt8.max))) }
+    let input = "These are not rap lyrics."
+    let key = "YELLOW SUBMARINE"
+    let result = Crypto.encryptAES128CBC(input, key: key, iv: iv)
+    print("encryptAES128CBC(\(input), key: \(key), iv: \(iv)) = \(result)\n")
+    
+    if let result2 = Crypto.decryptAES128CBC(result, key: key, iv: iv) {
+      print("decryptAES128CBC(...) = \(result2)\n")
+    } else {
+      print("Failed to decrypt AES128 CBC\n")
+    }
+    
+    do {
+      var input2 = try NSString(contentsOfFile: "10.txt", encoding: NSUTF8StringEncoding)
+      input2 = input2.stringByReplacingOccurrencesOfString("\r\n", withString: "")
+      let zeroIV = [UInt8](count: 16, repeatedValue: 0)
+      if let result3 = Crypto.decryptAES128CBC(input2 as String, key: key, iv: zeroIV) {
+        print("decryptAES128CBC (with 10.txt):\n\(result3)\n")
+      } else {
+        print("Failed to decrypt\n")
+      }
+    } catch {
+      print("Failed to read input file\n")
+    }
   }
   
   func testBase64() {

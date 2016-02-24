@@ -16,6 +16,7 @@
 		B512AE691C7A79CE00B83EEA /* 7.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE611C7A730400B83EEA /* 7.txt */; };
 		B512AE6B1C7B71E200B83EEA /* 8.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE6A1C7A7E0000B83EEA /* 8.txt */; };
 		B512AE751C7D10AC00B83EEA /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B512AE741C7D10AC00B83EEA /* libcrypto.a */; };
+		B512AE771C7E421700B83EEA /* 10.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE761C7E420400B83EEA /* 10.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				B512AE771C7E421700B83EEA /* 10.txt in CopyFiles */,
 				B512AE6B1C7B71E200B83EEA /* 8.txt in CopyFiles */,
 				B512AE691C7A79CE00B83EEA /* 7.txt in CopyFiles */,
 				B512AE441C6C271E00B83EEA /* 4.txt in CopyFiles */,
@@ -46,6 +48,7 @@
 		B512AE6A1C7A7E0000B83EEA /* 8.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 8.txt; sourceTree = "<group>"; };
 		B512AE6E1C7CFEC400B83EEA /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
 		B512AE741C7D10AC00B83EEA /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
+		B512AE761C7E420400B83EEA /* 10.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 10.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +91,7 @@
 				B512AE451C6C30FC00B83EEA /* 6.txt */,
 				B512AE611C7A730400B83EEA /* 7.txt */,
 				B512AE6A1C7A7E0000B83EEA /* 8.txt */,
+				B512AE761C7E420400B83EEA /* 10.txt */,
 				B512AE6E1C7CFEC400B83EEA /* bridge.h */,
 			);
 			path = CryptoChellenges;

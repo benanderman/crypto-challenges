@@ -41,6 +41,11 @@ struct Crypto {
     return result.hexStringRepresentation
   }
   
+  static func xorData(data1: [UInt8], data2: [UInt8]) -> [UInt8]? {
+    guard data1.count == data2.count else {return nil}
+    return (0 ..< data1.count).map{ data1[$0] ^ data2[$0] }
+  }
+  
   static func findBestHammingDistance(data: [UInt8], range: Range<Int>) -> Int {
     var keySize = 0
     var bestEditDistance = Double.infinity
@@ -155,7 +160,7 @@ struct Crypto {
     return score
   }
   
-  static func decodeAES128Base64(data: String, key: String) -> String? {
+  static func decodeAES128Base64(data: String, key: String) -> [UInt8]? {
     guard var bytes = data.bytesFromBase64 where bytes.count % 16 == 0 else { return nil }
     
     // Fixes a linker error caused by an OpenSSL bug with static libraries
@@ -167,7 +172,38 @@ struct Crypto {
     for i in 0.stride(to: bytes.count, by: 16) {
       AES_ecb_encrypt(&bytes + i, &result + i, &dec_key, AES_DECRYPT)
     }
-    return result.stringRepresentation
+    return result
+  }
+  
+  static func encryptAES128CBC(input: String, key: String, iv: [UInt8]) -> String {
+    var bytes = padUsingPKCS7(input.bytes, multiple: 16)
+    var enc_key: AES_KEY = AES_KEY()
+    AES_set_encrypt_key(key.bytes, 128, &enc_key)
+    
+    var lastBlock = iv
+    var result = [UInt8](count: bytes.count, repeatedValue: 0)
+    for i in 0.stride(to: bytes.count, by: 16) {
+      let xored = (0 ..< 16).map{ bytes[i + $0] ^ lastBlock[$0] }
+      bytes.replaceRange(i ..< i + 16, with: xored)
+      AES_ecb_encrypt(&bytes + i, &result + i, &enc_key, AES_ENCRYPT)
+      lastBlock = [UInt8](result[i ..< i + 16])
+    }
+    return result.base64Representation
+  }
+  
+  static func decryptAES128CBC(input: String, key: String, iv: [UInt8]) -> String? {
+    guard var bytes = input.bytesFromBase64 where bytes.count % 16 == 0 else { return nil }
+    guard var decoded = decodeAES128Base64(input, key: key) where decoded.count == bytes.count else { return nil }
+    
+    var xorWith = iv
+    for i in 0.stride(to: bytes.count, by: 16) {
+      let range = i ..< i + 16
+      guard let xored = xorData([UInt8](decoded[range]), data2: xorWith) else { return nil }
+      decoded.replaceRange(range, with: xored)
+      xorWith = [UInt8](bytes[range])
+    }
+    
+    return decoded.stringRepresentation
   }
   
   static func detectAES128Hex(inputs: [String]) -> String? {
