@@ -193,8 +193,14 @@ struct Crypto {
     return result
   }
   
-  static func decipherSingleByteXor(string: [UInt8], key: UInt8) -> [UInt8] {
-    return string.map { $0 ^ key }
+  static func padUsingPKCS7(var data: [UInt8], multiple: UInt8) -> [UInt8] {
+    let padding = Int(multiple) - (data.count % Int(multiple));
+    data += [UInt8](count: padding, repeatedValue: UInt8(padding))
+    return data
+  }
+  
+  static func decipherSingleByteXor(data: [UInt8], key: UInt8) -> [UInt8] {
+    return data.map { $0 ^ key }
   }
   
   static func cipherStringWithKey(string: String, key: [UInt8]) -> String {

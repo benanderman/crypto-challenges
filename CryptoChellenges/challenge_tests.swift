@@ -21,6 +21,7 @@ func testChallenges() {
     testChallenge6()
     testChallenge7()
     testChallenge8()
+    testChallenge9()
   }
   
   testAllChallenges()
@@ -122,6 +123,12 @@ func testChallenges() {
     let resultInt = Crypto.hammingDistance(hammingInput1.bytes, data2: hammingInput2.bytes)
     // Should be 37
     print("editDistance('\(hammingInput1)', '\(hammingInput2)') = \(resultInt)\n")
+  }
+  
+  func testChallenge9() {
+    let input = "YELLOW SUBMARINE".bytes
+    let result = Crypto.padUsingPKCS7(input, multiple: 20)
+    print("padUsingPKCS7(\(input), multiple: 20) = \(result)")
   }
   
   func testBase64() {
