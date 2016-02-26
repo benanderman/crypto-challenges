@@ -160,14 +160,30 @@ struct Crypto {
     return score
   }
   
-  static func decodeAES128Base64(data: String, key: String) -> [UInt8]? {
-    guard var bytes = data.bytesFromBase64 where bytes.count % 16 == 0 else { return nil }
+  static func encryptAES128ECB(input: [UInt8]) -> [UInt8] {
+    return encryptAES128ECB(input, key: randomBytes(16), iv: randomBytes(16))
+  }
+  
+  static func encryptAES128ECB(input: [UInt8], key: [UInt8], iv: [UInt8]) -> [UInt8] {
+    var bytes = padUsingPKCS7(input, multiple: 16)
+    var enc_key: AES_KEY = AES_KEY()
+    AES_set_encrypt_key(key, 128, &enc_key)
+    
+    var result = [UInt8](count: bytes.count, repeatedValue: 0)
+    for i in 0.stride(to: bytes.count, by: 16) {
+      AES_ecb_encrypt(&bytes + i, &result + i, &enc_key, AES_ENCRYPT)
+    }
+    return result
+  }
+  
+  static func decryptAES128(var bytes: [UInt8], key: [UInt8]) -> [UInt8]? {
+    guard bytes.count % 16 == 0 else { return nil }
     
     // Fixes a linker error caused by an OpenSSL bug with static libraries
     OPENSSL_cleanse(nil, 0)
     
     var dec_key: AES_KEY = AES_KEY()
-    AES_set_decrypt_key(key.bytes, 128, &dec_key)
+    AES_set_decrypt_key(key, 128, &dec_key)
     var result = [UInt8](count: bytes.count, repeatedValue: 0)
     for i in 0.stride(to: bytes.count, by: 16) {
       AES_ecb_encrypt(&bytes + i, &result + i, &dec_key, AES_DECRYPT)
@@ -175,10 +191,14 @@ struct Crypto {
     return result
   }
   
-  static func encryptAES128CBC(input: String, key: String, iv: [UInt8]) -> String {
-    var bytes = padUsingPKCS7(input.bytes, multiple: 16)
+  static func encryptAES128CBC(input: [UInt8]) -> [UInt8] {
+    return encryptAES128CBC(input, key: randomBytes(16), iv: randomBytes(16))
+  }
+  
+  static func encryptAES128CBC(input: [UInt8], key: [UInt8], iv: [UInt8]) -> [UInt8] {
+    var bytes = padUsingPKCS7(input, multiple: 16)
     var enc_key: AES_KEY = AES_KEY()
-    AES_set_encrypt_key(key.bytes, 128, &enc_key)
+    AES_set_encrypt_key(key, 128, &enc_key)
     
     var lastBlock = iv
     var result = [UInt8](count: bytes.count, repeatedValue: 0)
@@ -188,12 +208,12 @@ struct Crypto {
       AES_ecb_encrypt(&bytes + i, &result + i, &enc_key, AES_ENCRYPT)
       lastBlock = [UInt8](result[i ..< i + 16])
     }
-    return result.base64Representation
+    return result
   }
   
-  static func decryptAES128CBC(input: String, key: String, iv: [UInt8]) -> String? {
-    guard var bytes = input.bytesFromBase64 where bytes.count % 16 == 0 else { return nil }
-    guard var decoded = decodeAES128Base64(input, key: key) where decoded.count == bytes.count else { return nil }
+  static func decryptAES128CBC(bytes: [UInt8], key: [UInt8], iv: [UInt8]) -> [UInt8]? {
+    guard bytes.count % 16 == 0 else { return nil }
+    guard var decoded = decryptAES128(bytes, key: key) where decoded.count == bytes.count else { return nil }
     
     var xorWith = iv
     for i in 0.stride(to: bytes.count, by: 16) {
@@ -203,7 +223,18 @@ struct Crypto {
       xorWith = [UInt8](bytes[range])
     }
     
-    return decoded.stringRepresentation
+    return decoded
+  }
+  
+  static func encryptAES128Random(var input: [UInt8]) -> (result: [UInt8], usedCBC: Bool) {
+    let prefix  = randomBytes(5 + Int(arc4random_uniform(UInt32(6))))
+    let postfix = randomBytes(5 + Int(arc4random_uniform(UInt32(6))))
+    input = prefix + input + postfix
+    if UInt8(arc4random_uniform(UInt32(2))) == 1 {
+      return (encryptAES128CBC(input), true)
+    } else {
+      return (encryptAES128ECB(input), false)
+    }
   }
   
   static func detectAES128Hex(inputs: [String]) -> String? {
@@ -243,6 +274,10 @@ struct Crypto {
     return string.bytes.enumerate().map({ (index: Int, byte: UInt8) in
       return byte ^ key[index % key.count]
     }).hexStringRepresentation
+  }
+  
+  static func randomBytes(count: Int) -> [UInt8] {
+    return (0 ..< count).map { _ in UInt8(arc4random_uniform(UInt32(UInt8.max))) }
   }
   
   static func hammingDistance(data1: [UInt8], data2: [UInt8]) -> Int {

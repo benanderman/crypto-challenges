@@ -23,6 +23,7 @@ func testChallenges() {
     testChallenge8()
     testChallenge9()
     testChallenge10()
+    testChallenge11()
   }
   
   testAllChallenges()
@@ -90,17 +91,15 @@ func testChallenges() {
   }
   
   func testChallenge7() {
-    do {
-      var aes128Input = try NSString(contentsOfFile: "7.txt", encoding: NSUTF8StringEncoding)
-      aes128Input = aes128Input.stringByReplacingOccurrencesOfString("\r\n", withString: "")
-      let key = "YELLOW SUBMARINE"
-      if let result = Crypto.decodeAES128Base64(String(aes128Input), key: key) {
-        print("decodeAES128Base64 (with 7.txt):\n\(result)\n")
-      } else {
-        print("Failed to decode AES128")
-      }
-    } catch {
+    guard let aes128Input = getFileWithoutNewLines("7.txt")?.bytesFromBase64 else {
       print("Failed to read input file\n")
+      return
+    }
+    let key = "YELLOW SUBMARINE"
+    if let result = Crypto.decryptAES128(aes128Input, key: key.bytes) {
+      print("decodeAES128Base64 (with 7.txt):\n\(result.stringRepresentation)\n")
+    } else {
+      print("Failed to decode AES128")
     }
   }
   
@@ -133,30 +132,39 @@ func testChallenges() {
   }
   
   func testChallenge10() {
-    let iv = (0 ..< 16).map { _ in UInt8(arc4random_uniform(UInt32(UInt8.max))) }
+    let iv = Crypto.randomBytes(16)
     let input = "These are not rap lyrics."
     let key = "YELLOW SUBMARINE"
-    let result = Crypto.encryptAES128CBC(input, key: key, iv: iv)
-    print("encryptAES128CBC(\(input), key: \(key), iv: \(iv)) = \(result)\n")
+    let result = Crypto.encryptAES128CBC(input.bytes, key: key.bytes, iv: iv)
+    print("encryptAES128CBC(\(input), key: \(key), iv: \(iv)) = \(result.base64Representation)\n")
     
-    if let result2 = Crypto.decryptAES128CBC(result, key: key, iv: iv) {
-      print("decryptAES128CBC(...) = \(result2)\n")
+    if let result2 = Crypto.decryptAES128CBC(result, key: key.bytes, iv: iv) {
+      print("decryptAES128CBC(...) = \(result2.stringRepresentation)\n")
     } else {
       print("Failed to decrypt AES128 CBC\n")
     }
     
-    do {
-      var input2 = try NSString(contentsOfFile: "10.txt", encoding: NSUTF8StringEncoding)
-      input2 = input2.stringByReplacingOccurrencesOfString("\r\n", withString: "")
+    if let input2 = getFileWithoutNewLines("10.txt")?.bytesFromBase64 {
       let zeroIV = [UInt8](count: 16, repeatedValue: 0)
-      if let result3 = Crypto.decryptAES128CBC(input2 as String, key: key, iv: zeroIV) {
-        print("decryptAES128CBC (with 10.txt):\n\(result3)\n")
+      if let result3 = Crypto.decryptAES128CBC(input2, key: key.bytes, iv: zeroIV) {
+        print("decryptAES128CBC (with 10.txt):\n\(result3.stringRepresentation)\n")
       } else {
         print("Failed to decrypt\n")
       }
-    } catch {
+    } else {
       print("Failed to read input file\n")
     }
+  }
+  
+  func testChallenge11() {
+    let input = [UInt8](count: 48, repeatedValue: 65)
+    for _ in 0 ..< 10 {
+      let result = Crypto.encryptAES128Random(input)
+      let usedECBGuess = Crypto.detectAES128Hex([result.result.hexStringRepresentation]) != nil
+      let guessedCorrectly = usedECBGuess != result.usedCBC
+      print("Guessed encryption type correctly: \(guessedCorrectly) (\(result.usedCBC ? "CBC" : "ECB"))")
+    }
+    print("\n")
   }
   
   func testBase64() {
@@ -167,6 +175,15 @@ func testChallenges() {
       } else {
         print("Failed to convert \(input) to base64 and back\n")
       }
+    }
+  }
+  
+  func getFileWithoutNewLines(path: String) -> String? {
+    do {
+      let content = try NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding)
+      return content.stringByReplacingOccurrencesOfString("\r\n", withString: "")
+    } catch {
+      return nil
     }
   }
 }

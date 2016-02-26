@@ -33,6 +33,7 @@ extension String {
     var result: [UInt8] = [UInt8]()
     for var i = 0; i < bytes.count; i += 4 {
       let chars: [UInt8] = bytes[i ... i + 3].map({ (byte) -> UInt8 in
+        // TODO: replace with switch
         if byte >= "A".utf8.first! && byte <= "Z".utf8.first! {
           return byte - "A".utf8.first!
         }
@@ -64,7 +65,8 @@ extension String {
 
 extension CollectionType where Generator.Element == UInt8, Index == Int {
   var stringRepresentation: String {
-    return String(bytes: self, encoding: NSUTF8StringEncoding) ?? ""
+    guard let result = String(bytes: self, encoding: NSUTF8StringEncoding) else { fatalError() }
+    return result
   }
   
   var hexRepresentation: [UInt8] {
@@ -95,7 +97,8 @@ extension CollectionType where Generator.Element == UInt8, Index == Int {
       let out4 =   in3 & (~0 >> 2)
       result.appendContentsOf([out1, out2, out3, out4].map{ values[Int($0)] })
     }
-    let padding = (3 - (self.count % 3)) % 3
+    
+    let padding = (3 - (self.count % 3)) % 3 // 🙃💩😞
     result[result.count - padding ..< result.count] = "==".bytes[0 ..< padding]
     
     return result.stringRepresentation
