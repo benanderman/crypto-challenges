@@ -193,17 +193,14 @@ func testChallenges() {
       let o = i / blockSize * blockSize
       let injectSize = blockSize - (i % blockSize + 1)
       let inject = [UInt8](decodedBlock[0 ..< injectSize])
-      let values = (0 ..< UInt8.max).map {
-        [UInt8](Crypto.encryptAES128RandomStaticECB(decodedBlock[1 ..< blockSize] + [$0])[0 ..< blockSize])
-      }
       let result = [UInt8](Crypto.encryptAES128RandomStaticECB(inject)[o ..< o + blockSize])
-      for (index, block) in values.enumerate() {
-        if block == result {
-          let decodedChar = UInt8(index)
-          decoded.append(decodedChar)
-          decodedBlock.append(decodedChar)
+      for c in 0 ..< UInt8.max {
+        let test = [UInt8](Crypto.encryptAES128RandomStaticECB(decodedBlock[1 ..< blockSize] + [c])[0 ..< blockSize])
+        if (test == result) {
+          decoded.append(c)
+          decodedBlock.append(c)
           decodedBlock.removeFirst()
-          break
+          break;
         }
       }
     }

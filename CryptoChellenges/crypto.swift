@@ -238,9 +238,10 @@ struct Crypto {
   }
   
   static let staticKey = Crypto.randomBytes(16)
+  static let postfix = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK".bytesFromBase64
   static func encryptAES128RandomStaticECB(var input: [UInt8]) -> [UInt8] {
-    guard let postfix = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK".bytesFromBase64 else { fatalError() }
-    input = input + postfix
+    guard postfix != nil else { fatalError() }
+    input = input + postfix!
     return encryptAES128ECB(input, key: staticKey)
   }
   
