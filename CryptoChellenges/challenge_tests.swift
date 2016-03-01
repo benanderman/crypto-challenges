@@ -24,6 +24,7 @@ func testChallenges() {
     testChallenge9()
     testChallenge10()
     testChallenge11()
+    testChallenge12()
   }
   
   testAllChallenges()
@@ -165,6 +166,48 @@ func testChallenges() {
       print("Guessed encryption type correctly: \(guessedCorrectly) (\(result.usedCBC ? "CBC" : "ECB"))")
     }
     print("\n")
+  }
+  
+  func testChallenge12() {
+    var blockSize = 0
+    var previousResult = [UInt8]()
+    for i in 1...129 {
+      let result = Crypto.encryptAES128RandomStaticECB([UInt8](count: i, repeatedValue: 65))
+      if i > 1 && previousResult[0 ..< i - 1] == result[0 ..< i - 1] {
+        blockSize = i - 1;
+        break
+      }
+      previousResult = result
+    }
+    print("Block size is: \(blockSize)")
+    
+    let input = [UInt8](count: 48, repeatedValue: 65)
+    let result = Crypto.encryptAES128RandomStaticECB(input)
+    let usedECBGuess = Crypto.detectAES128Hex([result.hexStringRepresentation]) != nil
+    print("Using ECB: \(usedECBGuess ? "yes" : "no")\n")
+    
+    let length = result.count - input.count
+    var decoded = [UInt8]()
+    var decodedBlock = [UInt8](count: 16, repeatedValue: 65)
+    for i in 0 ..< length {
+      let o = i / blockSize * blockSize
+      let injectSize = blockSize - (i % blockSize + 1)
+      let inject = [UInt8](decodedBlock[0 ..< injectSize])
+      let values = (0 ..< UInt8.max).map {
+        [UInt8](Crypto.encryptAES128RandomStaticECB(decodedBlock[1 ..< blockSize] + [$0])[0 ..< blockSize])
+      }
+      let result = [UInt8](Crypto.encryptAES128RandomStaticECB(inject)[o ..< o + blockSize])
+      for (index, block) in values.enumerate() {
+        if block == result {
+          let decodedChar = UInt8(index)
+          decoded.append(decodedChar)
+          decodedBlock.append(decodedChar)
+          decodedBlock.removeFirst()
+          break
+        }
+      }
+    }
+    print("The decoded text is:\n\(decoded.stringRepresentation)\n")
   }
   
   func testBase64() {

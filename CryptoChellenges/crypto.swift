@@ -161,10 +161,10 @@ struct Crypto {
   }
   
   static func encryptAES128ECB(input: [UInt8]) -> [UInt8] {
-    return encryptAES128ECB(input, key: randomBytes(16), iv: randomBytes(16))
+    return encryptAES128ECB(input, key: randomBytes(16))
   }
   
-  static func encryptAES128ECB(input: [UInt8], key: [UInt8], iv: [UInt8]) -> [UInt8] {
+  static func encryptAES128ECB(input: [UInt8], key: [UInt8]) -> [UInt8] {
     var bytes = padUsingPKCS7(input, multiple: 16)
     var enc_key: AES_KEY = AES_KEY()
     AES_set_encrypt_key(key, 128, &enc_key)
@@ -235,6 +235,13 @@ struct Crypto {
     } else {
       return (encryptAES128ECB(input), false)
     }
+  }
+  
+  static let staticKey = Crypto.randomBytes(16)
+  static func encryptAES128RandomStaticECB(var input: [UInt8]) -> [UInt8] {
+    guard let postfix = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK".bytesFromBase64 else { fatalError() }
+    input = input + postfix
+    return encryptAES128ECB(input, key: staticKey)
   }
   
   static func detectAES128Hex(inputs: [String]) -> String? {
