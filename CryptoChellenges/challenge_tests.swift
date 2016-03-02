@@ -11,20 +11,21 @@ import Foundation
 func testChallenges() {
   
   func testAllChallenges() {
-    testBase64()
-    testHammingDistance()
-    testChallenge1()
-    testChallenge2()
-    testChallenge3()
-    testChallenge4()
-    testChallenge5()
-    testChallenge6()
-    testChallenge7()
-    testChallenge8()
-    testChallenge9()
-    testChallenge10()
-    testChallenge11()
+//    testBase64()
+//    testHammingDistance()
+//    testChallenge1()
+//    testChallenge2()
+//    testChallenge3()
+//    testChallenge4()
+//    testChallenge5()
+//    testChallenge6()
+//    testChallenge7()
+//    testChallenge8()
+//    testChallenge9()
+//    testChallenge10()
+//    testChallenge11()
     testChallenge12()
+    testChallenge13()
   }
   
   testAllChallenges()
@@ -205,6 +206,55 @@ func testChallenges() {
       }
     }
     print("The decoded text is:\n\(decoded.stringRepresentation)\n")
+  }
+  
+  func testChallenge13() {
+    let key = Crypto.randomBytes(16)
+    
+    func UFESerializeUser(email: String, uid: String, role: String) -> String {
+      return "email=\(email)&uid=\(uid)&role=\(role)"
+    }
+    
+    func parseUFEString(input: String) -> [String:String] {
+      var result = [String:String]()
+      for pair in input.componentsSeparatedByString("&") {
+        var splitPair = pair.componentsSeparatedByString("=")
+        guard splitPair.count == 2 else { fatalError() }
+        result[splitPair[0]] = splitPair[1]
+      }
+      return result
+    }
+    
+    func profileFor(var email: String) -> String {
+      email = email.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "&="))
+      return Crypto.encryptAES128ECB(UFESerializeUser(email, uid: "10", role: "user").bytes, key: key).hexStringRepresentation
+    }
+    
+    var justAdmin = profileFor("1234567890" + Crypto.padUsingPKCS7("admin".bytes, multiple: 16).stringRepresentation)
+    justAdmin = justAdmin.substringWithRange(Range(start: justAdmin.startIndex.advancedBy(32), end: justAdmin.startIndex.advancedBy(64)))
+    
+    var adminProfile = ""
+    var email = "a@gmail.com"
+    var lastResult = profileFor(email)
+    for _ in 0 ..< 16 {
+      email = "a" + email
+      var result = profileFor(email)
+      // If this resulted in a new block being created (which would be a block of all padding)
+      if result.utf8.count > lastResult.utf8.count {
+        // Push "user" into the new block
+        result = profileFor("user" + email)
+        adminProfile = result.substringToIndex(result.startIndex.advancedBy(result.utf8.count - 32)) + justAdmin
+        break
+      } else {
+        lastResult = result
+      }
+    }
+    
+    if let adminProfileBytes = adminProfile.bytesFromHex, let decrypted = Crypto.decryptAES128(adminProfileBytes, key: key)?.stringRepresentation {
+      print("Admin profile: \(parseUFEString(decrypted))\n")
+    } else {
+      print("Failed to decrypt admin profile 😞\n")
+    }
   }
   
   func testBase64() {
