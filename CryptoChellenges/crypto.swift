@@ -176,7 +176,7 @@ struct Crypto {
     return result
   }
   
-  static func decryptAES128(var bytes: [UInt8], key: [UInt8]) -> [UInt8]? {
+  static func decryptAES128ECB(var bytes: [UInt8], key: [UInt8]) -> [UInt8]? {
     guard bytes.count % 16 == 0 else { return nil }
     
     // Fixes a linker error caused by an OpenSSL bug with static libraries
@@ -213,7 +213,7 @@ struct Crypto {
   
   static func decryptAES128CBC(bytes: [UInt8], key: [UInt8], iv: [UInt8]) -> [UInt8]? {
     guard bytes.count % 16 == 0 else { return nil }
-    guard var decoded = decryptAES128(bytes, key: key) where decoded.count == bytes.count else { return nil }
+    guard var decoded = decryptAES128ECB(bytes, key: key) where decoded.count == bytes.count else { return nil }
     
     var xorWith = iv
     for i in 0.stride(to: bytes.count, by: 16) {
@@ -243,6 +243,16 @@ struct Crypto {
     guard postfix != nil else { fatalError() }
     input = input + postfix!
     return encryptAES128ECB(input, key: staticKey)
+  }
+  
+  static func encryptAES128RandomStaticECBNoise(input: [UInt8]) -> [UInt8] {
+    guard postfix != nil else { fatalError() }
+    let noise = Crypto.randomBytes(Int(arc4random_uniform(128)))
+//    input = noise + input + postfix!
+    var fullInput = noise
+    fullInput.appendContentsOf(input)
+    fullInput.appendContentsOf(postfix!)
+    return encryptAES128ECB(fullInput, key: staticKey)
   }
   
   static func detectAES128Hex(inputs: [String]) -> String? {

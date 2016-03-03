@@ -26,6 +26,7 @@ func testChallenges() {
 //    testChallenge11()
     testChallenge12()
     testChallenge13()
+    testChallenge14()
   }
   
   testAllChallenges()
@@ -98,7 +99,7 @@ func testChallenges() {
       return
     }
     let key = "YELLOW SUBMARINE"
-    if let result = Crypto.decryptAES128(aes128Input, key: key.bytes) {
+    if let result = Crypto.decryptAES128ECB(aes128Input, key: key.bytes) {
       print("decodeAES128Base64 (with 7.txt):\n\(result.stringRepresentation)\n")
     } else {
       print("Failed to decode AES128")
@@ -169,23 +170,21 @@ func testChallenges() {
     print("\n")
   }
   
-  func testChallenge12() {
+  func decryptECBWithEncryptor(encryptor: ([UInt8]) -> [UInt8]) -> (blockSize: Int, usingECB: Bool, decoded: [UInt8]) {
     var blockSize = 0
     var previousResult = [UInt8]()
     for i in 1...129 {
-      let result = Crypto.encryptAES128RandomStaticECB([UInt8](count: i, repeatedValue: 65))
+      let result = encryptor([UInt8](count: i, repeatedValue: 65))
       if i > 1 && previousResult[0 ..< i - 1] == result[0 ..< i - 1] {
         blockSize = i - 1;
         break
       }
       previousResult = result
     }
-    print("Block size is: \(blockSize)")
     
     let input = [UInt8](count: 48, repeatedValue: 65)
-    let result = Crypto.encryptAES128RandomStaticECB(input)
+    let result = encryptor(input)
     let usedECBGuess = Crypto.detectAES128Hex([result.hexStringRepresentation]) != nil
-    print("Using ECB: \(usedECBGuess ? "yes" : "no")\n")
     
     let length = result.count - input.count
     var decoded = [UInt8]()
@@ -194,9 +193,9 @@ func testChallenges() {
       let o = i / blockSize * blockSize
       let injectSize = blockSize - (i % blockSize + 1)
       let inject = [UInt8](decodedBlock[0 ..< injectSize])
-      let result = [UInt8](Crypto.encryptAES128RandomStaticECB(inject)[o ..< o + blockSize])
+      let result = [UInt8](encryptor(inject)[o ..< o + blockSize])
       for c in 0 ..< UInt8.max {
-        let test = [UInt8](Crypto.encryptAES128RandomStaticECB(decodedBlock[1 ..< blockSize] + [c])[0 ..< blockSize])
+        let test = [UInt8](encryptor(decodedBlock[1 ..< blockSize] + [c])[0 ..< blockSize])
         if (test == result) {
           decoded.append(c)
           decodedBlock.append(c)
@@ -205,7 +204,16 @@ func testChallenges() {
         }
       }
     }
-    print("The decoded text is:\n\(decoded.stringRepresentation)\n")
+    
+    return (blockSize, usedECBGuess, decoded)
+  }
+  
+  func testChallenge12() {
+    let (blockSize, usedECB, decrypted) = decryptECBWithEncryptor(Crypto.encryptAES128RandomStaticECB)
+    
+    print("Block size is: \(blockSize)")
+    print("Using ECB: \(usedECB ? "yes" : "no")")
+    print("The decoded text is:\n\(decrypted.stringRepresentation)\n")
   }
   
   func testChallenge13() {
@@ -250,11 +258,39 @@ func testChallenges() {
       }
     }
     
-    if let adminProfileBytes = adminProfile.bytesFromHex, let decrypted = Crypto.decryptAES128(adminProfileBytes, key: key)?.stringRepresentation {
+    if let adminProfileBytes = adminProfile.bytesFromHex, let decrypted = Crypto.decryptAES128ECB(adminProfileBytes, key: key)?.stringRepresentation {
       print("Admin profile: \(parseUFEString(decrypted))\n")
     } else {
       print("Failed to decrypt admin profile 😞\n")
     }
+  }
+  
+  func testChallenge14() {
+    
+    let a = Crypto.randomBytes(16).map { $0 == 1 ? 2 : $0 }
+    let b = [UInt8](count: 16, repeatedValue: 1)
+    let insert = a + b + b + a
+    
+    func encryptAndRemovePrefix(input: [UInt8]) -> [UInt8] {
+      var result = [UInt8]()
+      mainLoop: for _ in 0 ... 10000 {
+        result = Crypto.encryptAES128RandomStaticECBNoise(insert + input)
+        for i in 3 ..< result.count / 16 {
+          let blocks = (i - 3 ... i).map { result[$0 * 16 ..< ($0 + 1) * 16] }
+          if blocks[0] == blocks[3] && blocks[1] == blocks[2] && blocks[0] != blocks[1] {
+            result = [UInt8](result[(i + 1) * 16 ..< result.count])
+            break mainLoop
+          }
+        }
+      }
+      return result
+    }
+    
+    let (blockSize, usedECB, decrypted) = decryptECBWithEncryptor(encryptAndRemovePrefix)
+    
+    print("Block size is: \(blockSize)")
+    print("Using ECB: \(usedECB ? "yes" : "no")")
+    print("The decoded text is:\n\(decrypted.stringRepresentation)\n")
   }
   
   func testBase64() {
