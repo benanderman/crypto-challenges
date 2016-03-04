@@ -28,6 +28,7 @@ func testChallenges() {
 //    testChallenge13()
 //    testChallenge14()
     testChallenge15()
+    testChallenge16()
   }
   
   testAllChallenges()
@@ -302,6 +303,34 @@ func testChallenges() {
     print("Strip padding of \(good1) = \(Crypto.stripPKCS7Padding(good1))")
     print("Strip padding of \(good2) = \(Crypto.stripPKCS7Padding(good2))")
     print("Strip padding of \(bad) = \(Crypto.stripPKCS7Padding(bad))\n")
+  }
+  
+  func testChallenge16() {
+    let key = Crypto.randomBytes(16)
+    let iv = Crypto.randomBytes(16)
+    
+    func encrypt(var input: [UInt8]) -> [UInt8] {
+      input = "comment1=cooking%20MCs;userdata=".bytes + input + ";comment2=%20like%20a%20pound%20of%20bacon".bytes
+      return Crypto.encryptAES128CBC(input, key: key, iv: iv)
+    }
+    
+    func checkForAdmin(input: [UInt8]) -> Bool {
+      guard let decrypted = Crypto.decryptAES128CBC(input, key: key, iv: iv) else { return false }
+      let admin = ";admin=true;".bytes
+      for i in 0 ..< decrypted.count - admin.count {
+        if decrypted[i ..< i + admin.count] == admin[0 ..< admin.count] {
+          return true
+        }
+      }
+      return false
+    }
+    
+    let input = "12345".bytes + [UInt8](count: 11, repeatedValue: 0)
+    let xor = [UInt8](count: 5, repeatedValue: 0) + ";admin=true".bytes
+    var result = encrypt(input)
+    result[16 * 1 ..< 16 * 2] = Crypto.xorData([UInt8](result[16 * 1 ..< 16 * 2]), data2: xor)![0 ..< 16]
+    
+    print("Found ;admin=true; in result: \(checkForAdmin(result))\n")
   }
   
   func testBase64() {
