@@ -24,9 +24,10 @@ func testChallenges() {
 //    testChallenge9()
 //    testChallenge10()
 //    testChallenge11()
-    testChallenge12()
-    testChallenge13()
-    testChallenge14()
+//    testChallenge12()
+//    testChallenge13()
+//    testChallenge14()
+    testChallenge15()
   }
   
   testAllChallenges()
@@ -291,6 +292,16 @@ func testChallenges() {
     print("Block size is: \(blockSize)")
     print("Using ECB: \(usedECB ? "yes" : "no")")
     print("The decoded text is:\n\(decrypted.stringRepresentation)\n")
+  }
+  
+  func testChallenge15() {
+    let good1 = Crypto.padUsingPKCS7("1234567890".bytes)
+    let good2 = Crypto.padUsingPKCS7("1234567890123456".bytes)
+    let bad = "123456789012345".bytes + [5]
+    
+    print("Strip padding of \(good1) = \(Crypto.stripPKCS7Padding(good1))")
+    print("Strip padding of \(good2) = \(Crypto.stripPKCS7Padding(good2))")
+    print("Strip padding of \(bad) = \(Crypto.stripPKCS7Padding(bad))\n")
   }
   
   func testBase64() {

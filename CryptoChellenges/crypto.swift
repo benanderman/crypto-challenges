@@ -278,10 +278,30 @@ struct Crypto {
     return result
   }
   
-  static func padUsingPKCS7(var data: [UInt8], multiple: UInt8) -> [UInt8] {
+  static func padUsingPKCS7(var data: [UInt8], multiple: UInt8 = 16) -> [UInt8] {
     let padding = Int(multiple) - (data.count % Int(multiple));
     data += [UInt8](count: padding, repeatedValue: UInt8(padding))
     return data
+  }
+  
+  static func stripPKCS7Padding(data: [UInt8], multiple: UInt8 = 16) -> [UInt8]? {
+    guard data.count % Int(multiple) == 0 else { return nil }
+    var paddingCount = 0 as UInt8
+    var paddingByte = UInt8(0)
+    for i in 1 ... Int(multiple) {
+      let byte = data[data.count - i]
+      if i == 1 {
+        paddingByte = byte
+      }
+      paddingCount++
+      guard paddingByte == byte && paddingCount <= paddingByte && paddingByte <= multiple else {
+        return nil
+      }
+      if paddingCount == byte {
+        break
+      }
+    }
+    return [UInt8](data[0 ..< data.count - Int(paddingCount)])
   }
   
   static func decipherSingleByteXor(data: [UInt8], key: UInt8) -> [UInt8] {
