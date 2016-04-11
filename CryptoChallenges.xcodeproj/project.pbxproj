@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B512AE3B1C6BD9E900B83EEA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE3A1C6BD9E900B83EEA /* main.swift */; };
-		B512AE421C6BDA1700B83EEA /* crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE411C6BDA1700B83EEA /* crypto.swift */; };
-		B512AE441C6C271E00B83EEA /* 4.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE431C6C261500B83EEA /* 4.txt */; };
-		B512AE461C6C311700B83EEA /* 6.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE451C6C30FC00B83EEA /* 6.txt */; };
-		B512AE481C7009A000B83EEA /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE471C7009A000B83EEA /* extensions.swift */; };
-		B512AE4A1C73CF4D00B83EEA /* challenge_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512AE491C73CF4D00B83EEA /* challenge_tests.swift */; };
-		B512AE691C7A79CE00B83EEA /* 7.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE611C7A730400B83EEA /* 7.txt */; };
-		B512AE6B1C7B71E200B83EEA /* 8.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE6A1C7A7E0000B83EEA /* 8.txt */; };
 		B512AE751C7D10AC00B83EEA /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B512AE741C7D10AC00B83EEA /* libcrypto.a */; };
-		B512AE771C7E421700B83EEA /* 10.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B512AE761C7E420400B83EEA /* 10.txt */; };
+		B55829751CBC40030026D85D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55829711CBC3FC90026D85D /* main.swift */; };
+		B558297B1CBC40360026D85D /* challenge_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55829781CBC40360026D85D /* challenge_tests.swift */; };
+		B558297C1CBC40360026D85D /* crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55829791CBC40360026D85D /* crypto.swift */; };
+		B558297D1CBC40360026D85D /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B558297A1CBC40360026D85D /* extensions.swift */; };
+		B55829831CBC407A0026D85D /* 4.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B558297E1CBC40700026D85D /* 4.txt */; };
+		B55829841CBC407B0026D85D /* 6.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B558297F1CBC40700026D85D /* 6.txt */; };
+		B55829851CBC407E0026D85D /* 7.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B55829801CBC40700026D85D /* 7.txt */; };
+		B55829861CBC40810026D85D /* 8.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B55829811CBC40700026D85D /* 8.txt */; };
+		B55829871CBC40860026D85D /* 10.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = B55829821CBC40700026D85D /* 10.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,29 +26,29 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				B512AE771C7E421700B83EEA /* 10.txt in CopyFiles */,
-				B512AE6B1C7B71E200B83EEA /* 8.txt in CopyFiles */,
-				B512AE691C7A79CE00B83EEA /* 7.txt in CopyFiles */,
-				B512AE441C6C271E00B83EEA /* 4.txt in CopyFiles */,
-				B512AE461C6C311700B83EEA /* 6.txt in CopyFiles */,
+				B55829861CBC40810026D85D /* 8.txt in CopyFiles */,
+				B55829831CBC407A0026D85D /* 4.txt in CopyFiles */,
+				B55829841CBC407B0026D85D /* 6.txt in CopyFiles */,
+				B55829851CBC407E0026D85D /* 7.txt in CopyFiles */,
+				B55829871CBC40860026D85D /* 10.txt in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B512AE371C6BD9E900B83EEA /* CryptoChellenges */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CryptoChellenges; sourceTree = BUILT_PRODUCTS_DIR; };
-		B512AE3A1C6BD9E900B83EEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		B512AE411C6BDA1700B83EEA /* crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = crypto.swift; sourceTree = "<group>"; };
-		B512AE431C6C261500B83EEA /* 4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 4.txt; sourceTree = "<group>"; };
-		B512AE451C6C30FC00B83EEA /* 6.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 6.txt; sourceTree = "<group>"; };
-		B512AE471C7009A000B83EEA /* extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
-		B512AE491C73CF4D00B83EEA /* challenge_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = challenge_tests.swift; sourceTree = "<group>"; };
-		B512AE611C7A730400B83EEA /* 7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 7.txt; sourceTree = "<group>"; };
-		B512AE6A1C7A7E0000B83EEA /* 8.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 8.txt; sourceTree = "<group>"; };
+		B512AE371C6BD9E900B83EEA /* CryptoChallenges */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CryptoChallenges; sourceTree = BUILT_PRODUCTS_DIR; };
 		B512AE6E1C7CFEC400B83EEA /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
 		B512AE741C7D10AC00B83EEA /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
-		B512AE761C7E420400B83EEA /* 10.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 10.txt; sourceTree = "<group>"; };
+		B55829711CBC3FC90026D85D /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = CryptoChallenges/main.swift; sourceTree = SOURCE_ROOT; };
+		B55829781CBC40360026D85D /* challenge_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = challenge_tests.swift; path = CryptoChallenges/challenge_tests.swift; sourceTree = SOURCE_ROOT; };
+		B55829791CBC40360026D85D /* crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = crypto.swift; path = CryptoChallenges/crypto.swift; sourceTree = SOURCE_ROOT; };
+		B558297A1CBC40360026D85D /* extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = extensions.swift; path = CryptoChallenges/extensions.swift; sourceTree = SOURCE_ROOT; };
+		B558297E1CBC40700026D85D /* 4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 4.txt; path = CryptoChallenges/4.txt; sourceTree = SOURCE_ROOT; };
+		B558297F1CBC40700026D85D /* 6.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 6.txt; path = CryptoChallenges/6.txt; sourceTree = SOURCE_ROOT; };
+		B55829801CBC40700026D85D /* 7.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 7.txt; path = CryptoChallenges/7.txt; sourceTree = SOURCE_ROOT; };
+		B55829811CBC40700026D85D /* 8.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 8.txt; path = CryptoChallenges/8.txt; sourceTree = SOURCE_ROOT; };
+		B55829821CBC40700026D85D /* 10.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 10.txt; path = CryptoChallenges/10.txt; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +66,7 @@
 		B512AE2E1C6BD9E900B83EEA = {
 			isa = PBXGroup;
 			children = (
-				B512AE391C6BD9E900B83EEA /* CryptoChellenges */,
+				B512AE391C6BD9E900B83EEA /* CryptoChallenges */,
 				B512AE6F1C7D053E00B83EEA /* Libraries */,
 				B512AE381C6BD9E900B83EEA /* Products */,
 			);
@@ -75,26 +75,26 @@
 		B512AE381C6BD9E900B83EEA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B512AE371C6BD9E900B83EEA /* CryptoChellenges */,
+				B512AE371C6BD9E900B83EEA /* CryptoChallenges */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B512AE391C6BD9E900B83EEA /* CryptoChellenges */ = {
+		B512AE391C6BD9E900B83EEA /* CryptoChallenges */ = {
 			isa = PBXGroup;
 			children = (
-				B512AE411C6BDA1700B83EEA /* crypto.swift */,
-				B512AE3A1C6BD9E900B83EEA /* main.swift */,
-				B512AE471C7009A000B83EEA /* extensions.swift */,
-				B512AE491C73CF4D00B83EEA /* challenge_tests.swift */,
-				B512AE431C6C261500B83EEA /* 4.txt */,
-				B512AE451C6C30FC00B83EEA /* 6.txt */,
-				B512AE611C7A730400B83EEA /* 7.txt */,
-				B512AE6A1C7A7E0000B83EEA /* 8.txt */,
-				B512AE761C7E420400B83EEA /* 10.txt */,
+				B55829781CBC40360026D85D /* challenge_tests.swift */,
+				B55829791CBC40360026D85D /* crypto.swift */,
+				B55829711CBC3FC90026D85D /* main.swift */,
+				B558297A1CBC40360026D85D /* extensions.swift */,
+				B558297E1CBC40700026D85D /* 4.txt */,
+				B558297F1CBC40700026D85D /* 6.txt */,
+				B55829801CBC40700026D85D /* 7.txt */,
+				B55829811CBC40700026D85D /* 8.txt */,
+				B55829821CBC40700026D85D /* 10.txt */,
 				B512AE6E1C7CFEC400B83EEA /* bridge.h */,
 			);
-			path = CryptoChellenges;
+			path = CryptoChallenges;
 			sourceTree = "<group>";
 		};
 		B512AE6F1C7D053E00B83EEA /* Libraries */ = {
@@ -108,9 +108,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B512AE361C6BD9E900B83EEA /* CryptoChellenges */ = {
+		B512AE361C6BD9E900B83EEA /* CryptoChallenges */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B512AE3E1C6BD9E900B83EEA /* Build configuration list for PBXNativeTarget "CryptoChellenges" */;
+			buildConfigurationList = B512AE3E1C6BD9E900B83EEA /* Build configuration list for PBXNativeTarget "CryptoChallenges" */;
 			buildPhases = (
 				B512AE331C6BD9E900B83EEA /* Sources */,
 				B512AE341C6BD9E900B83EEA /* Frameworks */,
@@ -120,9 +120,9 @@
 			);
 			dependencies = (
 			);
-			name = CryptoChellenges;
-			productName = CryptoChellenges;
-			productReference = B512AE371C6BD9E900B83EEA /* CryptoChellenges */;
+			name = CryptoChallenges;
+			productName = CryptoChallenges;
+			productReference = B512AE371C6BD9E900B83EEA /* CryptoChallenges */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -140,7 +140,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B512AE321C6BD9E900B83EEA /* Build configuration list for PBXProject "CryptoChellenges" */;
+			buildConfigurationList = B512AE321C6BD9E900B83EEA /* Build configuration list for PBXProject "CryptoChallenges" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -152,7 +152,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B512AE361C6BD9E900B83EEA /* CryptoChellenges */,
+				B512AE361C6BD9E900B83EEA /* CryptoChallenges */,
 			);
 		};
 /* End PBXProject section */
@@ -162,10 +162,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B512AE421C6BDA1700B83EEA /* crypto.swift in Sources */,
-				B512AE4A1C73CF4D00B83EEA /* challenge_tests.swift in Sources */,
-				B512AE3B1C6BD9E900B83EEA /* main.swift in Sources */,
-				B512AE481C7009A000B83EEA /* extensions.swift in Sources */,
+				B55829751CBC40030026D85D /* main.swift in Sources */,
+				B558297C1CBC40360026D85D /* crypto.swift in Sources */,
+				B558297B1CBC40360026D85D /* challenge_tests.swift in Sources */,
+				B558297D1CBC40360026D85D /* extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,7 +189,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -212,7 +212,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Debug;
 		};
@@ -233,7 +233,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -249,7 +249,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -262,7 +262,7 @@
 					"$(PROJECT_DIR)/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = CryptoChellenges/bridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = CryptoChallenges/bridge.h;
 			};
 			name = Debug;
 		};
@@ -275,14 +275,14 @@
 					"$(PROJECT_DIR)/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = CryptoChellenges/bridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = CryptoChallenges/bridge.h;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B512AE321C6BD9E900B83EEA /* Build configuration list for PBXProject "CryptoChellenges" */ = {
+		B512AE321C6BD9E900B83EEA /* Build configuration list for PBXProject "CryptoChallenges" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B512AE3C1C6BD9E900B83EEA /* Debug */,
@@ -291,7 +291,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B512AE3E1C6BD9E900B83EEA /* Build configuration list for PBXNativeTarget "CryptoChellenges" */ = {
+		B512AE3E1C6BD9E900B83EEA /* Build configuration list for PBXNativeTarget "CryptoChallenges" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B512AE3F1C6BD9E900B83EEA /* Debug */,

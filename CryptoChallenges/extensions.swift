@@ -15,12 +15,14 @@ extension String {
   
   var bytesFromHex: [UInt8]? {
     var result = [UInt8]()
-    for var i = self.characters.startIndex; i != self.characters.endIndex; i = i.advancedBy(2) {
-      if let character = UInt8(substringWithRange(Range<Index>(start: i, end: i.advancedBy(2))), radix: 16) {
+    var i = self.characters.startIndex
+    while i != self.characters.endIndex {
+      if let character = UInt8(substringWithRange(i ..< i.advancedBy(2)), radix: 16) {
         result.append(character);
       } else {
         return nil
       }
+      i = i.advancedBy(2)
     }
     
     return result
@@ -31,7 +33,7 @@ extension String {
     guard bytes.count % 4 == 0 && bytes.count > 0 else {return nil}
     
     var result: [UInt8] = [UInt8]()
-    for var i = 0; i < bytes.count; i += 4 {
+    for i in 0.stride(to: bytes.count, by: 4) {
       let chars: [UInt8] = bytes[i ... i + 3].map({ (byte) -> UInt8 in
         // TODO: replace with switch
         if byte >= "A".utf8.first! && byte <= "Z".utf8.first! {

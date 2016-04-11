@@ -67,9 +67,9 @@ struct Crypto {
     return keySize
   }
   
-  static func decipherRepeatingKeyXorBase64(base64: String) -> (result: String, key: [UInt8])? {
+  static func decipherRepeatingKeyXorBase64(base64: String, keySize: Int? = nil) -> (result: String, key: [UInt8])? {
     guard let bytes = base64.bytesFromBase64 else {return nil}
-    let keySize = findBestHammingDistance(bytes, range: 2 ... 40)
+    let keySize = keySize ?? findBestHammingDistance(bytes, range: 2 ... 40)
     
     var blocks = [[UInt8]]()
     var key = [UInt8]()
@@ -176,7 +176,7 @@ struct Crypto {
     return result
   }
   
-  static func decryptAES128ECB(var bytes: [UInt8], key: [UInt8]) -> [UInt8]? {
+  static func decryptAES128ECB(bytes: [UInt8], key: [UInt8]) -> [UInt8]? {
     guard bytes.count % 16 == 0 else { return nil }
     
     // Fixes a linker error caused by an OpenSSL bug with static libraries
@@ -185,8 +185,9 @@ struct Crypto {
     var dec_key: AES_KEY = AES_KEY()
     AES_set_decrypt_key(key, 128, &dec_key)
     var result = [UInt8](count: bytes.count, repeatedValue: 0)
+    var varBytes = bytes
     for i in 0.stride(to: bytes.count, by: 16) {
-      AES_ecb_encrypt(&bytes + i, &result + i, &dec_key, AES_DECRYPT)
+      AES_ecb_encrypt(&varBytes + i, &result + i, &dec_key, AES_DECRYPT)
     }
     return result
   }
@@ -226,23 +227,22 @@ struct Crypto {
     return decoded
   }
   
-  static func encryptAES128Random(var input: [UInt8]) -> (result: [UInt8], usedCBC: Bool) {
+  static func encryptAES128Random(input: [UInt8]) -> (result: [UInt8], usedCBC: Bool) {
     let prefix  = randomBytes(5 + Int(arc4random_uniform(UInt32(6))))
     let postfix = randomBytes(5 + Int(arc4random_uniform(UInt32(6))))
-    input = prefix + input + postfix
+    let amended = prefix + input + postfix
     if UInt8(arc4random_uniform(UInt32(2))) == 1 {
-      return (encryptAES128CBC(input), true)
+      return (encryptAES128CBC(amended), true)
     } else {
-      return (encryptAES128ECB(input), false)
+      return (encryptAES128ECB(amended), false)
     }
   }
   
   static let staticKey = Crypto.randomBytes(16)
   static let postfix = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK".bytesFromBase64
-  static func encryptAES128RandomStaticECB(var input: [UInt8]) -> [UInt8] {
+  static func encryptAES128RandomStaticECB(input: [UInt8]) -> [UInt8] {
     guard postfix != nil else { fatalError() }
-    input = input + postfix!
-    return encryptAES128ECB(input, key: staticKey)
+    return encryptAES128ECB(input + postfix!, key: staticKey)
   }
   
   static func encryptAES128RandomStaticECBNoise(input: [UInt8]) -> [UInt8] {
@@ -262,13 +262,15 @@ struct Crypto {
       guard data.utf8.count % 32 == 0 else { continue }
       var hits = 0
       var blocks: Set<String> = []
-      for var i = data.startIndex; i != data.endIndex; i = i.advancedBy(32) {
+      var i = data.startIndex
+      while i != data.endIndex {
         let block = data.substringWithRange(i ..< i.advancedBy(32))
         if blocks.contains(block) {
-          hits++
+          hits += 1
         } else {
           blocks.insert(block)
         }
+        i = i.advancedBy(32)
       }
       if hits > mostHits {
         result = data
@@ -278,10 +280,11 @@ struct Crypto {
     return result
   }
   
-  static func padUsingPKCS7(var data: [UInt8], multiple: UInt8 = 16) -> [UInt8] {
-    let padding = Int(multiple) - (data.count % Int(multiple));
-    data += [UInt8](count: padding, repeatedValue: UInt8(padding))
-    return data
+  static func padUsingPKCS7(data: [UInt8], multiple: UInt8 = 16) -> [UInt8] {
+    let padding = Int(multiple) - (data.count % Int(multiple))
+    var padded = data
+    padded += [UInt8](count: padding, repeatedValue: UInt8(padding))
+    return padded
   }
   
   static func stripPKCS7Padding(data: [UInt8], multiple: UInt8 = 16) -> [UInt8]? {
@@ -293,7 +296,7 @@ struct Crypto {
       if i == 1 {
         paddingByte = byte
       }
-      paddingCount++
+      paddingCount += 1
       guard paddingByte == byte && paddingCount <= paddingByte && paddingByte <= multiple else {
         return nil
       }
@@ -324,7 +327,7 @@ struct Crypto {
     for i in 0 ..< data1.count {
       for o in 0 ..< 8 {
         if (data1[i] >> UInt8(o)) & 1 != (data2[i] >> UInt8(o)) & 1 {
-          distance++
+          distance += 1
         }
       }
     }
